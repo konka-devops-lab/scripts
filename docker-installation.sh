@@ -10,6 +10,7 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 git clone https://github.com/konka-devops-lab/scripts.git /home/ec2-user/scripts
 chown -R ec2-user:ec2-user /home/ec2-user/scripts
 bash /home/ec2-user/scripts/kind/kind-installation.sh
+rm -rf /home/ec2-user/get_helm.sh
 
 
 
