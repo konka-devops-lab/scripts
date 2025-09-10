@@ -1,8 +1,10 @@
 #!/bin/bash
 HOSTED_ZONE_ID="Z03345832QRDQYLQ53NTN"
-INSTANCE_ID="i-0334c66866af327db"
+INSTANCE_ID="i-053f6a4f0d8c7a0ed"
 DNS_NAME="runner.ullagallu.in"
 read -p "Please Enter Desired Instance Type: " NEW_INSTANCE_TYPE
+
+
 
 # Check the current state of the EC2 instance
 current_state=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].State.Name' --output text)

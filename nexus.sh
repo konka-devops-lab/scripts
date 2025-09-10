@@ -1,8 +1,8 @@
 #!/bin/bash
 # amz2023
 # Define variables
-JAVA_PACKAGE="java-17-amazon-corretto"
-NEXUS_URL="https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+JAVA_PACKAGE="java-21-amazon-corretto-devel"
+NEXUS_URL="https://download.sonatype.com/nexus/3/nexus-3.83.2-01-linux-x86_64.tar.gz"
 NEXUS_TMP_DIR="/tmp/nexus"
 NEXUS_INSTALL_DIR="/opt/nexus"
 SERVICE_FILE="/etc/systemd/system/nexus.service"
