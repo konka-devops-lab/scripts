@@ -1,18 +1,37 @@
 #!/bin/bash
+set -e
+
+# Install packages
 dnf install -y git docker tmux tree
-systemctl start docker
+
+# Start docker
+systemctl enable --now docker
 usermod -aG docker ec2-user
+
+# Docker compose
 curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh
+# Install Trivy
+curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
 
+# Wait for network
+sleep 20
+
+# Clone repo (clean first)
+rm -rf /home/ec2-user/scripts
 git clone https://github.com/konka-devops-lab/scripts.git /home/ec2-user/scripts
 chown -R ec2-user:ec2-user /home/ec2-user/scripts
+
+# Run your kind script
 bash /home/ec2-user/scripts/kind/kind-installation.sh
+
 rm -rf /home/ec2-user/get_helm.sh
 
 
+
+
+# - --kubelet-insecure-tls
 
 
 
