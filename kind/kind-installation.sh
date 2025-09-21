@@ -16,3 +16,7 @@ sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
 curl -sS https://webinstall.dev/k9s | bash
+
+rm -rf /home/ec2-user/get_helm.sh
+
+echo "set -g mouse on" >> ~/.tmux.conf
