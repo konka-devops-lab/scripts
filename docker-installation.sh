@@ -25,10 +25,13 @@ chown -R ec2-user:ec2-user /home/ec2-user/scripts
 
 # Run your kind script
 bash /home/ec2-user/scripts/kind/kind-installation.sh
-
+kind create cluster --config /home/ec2-user/scripts/kind/kind-cluster.yaml
 rm -rf /home/ec2-user/get_helm.sh
 
+rm -rf /home/ec2-user/k8s-administration
 
+git clone https://github.com/konka-devops-lab/k8s-administration.git /home/ec2-user/k8s-administration
+chown -R ec2-user:ec2-user /home/ec2-user/k8s-administration
 
 
 # - --kubelet-insecure-tls
