@@ -19,8 +19,14 @@ curl -sS https://webinstall.dev/k9s | bash
 
 rm -rf /home/ec2-user/get_helm.sh
 
+curl -LO https://github.com/kubecolor/kubecolor/releases/download/v0.5.1/kubecolor_0.5.1_linux_amd64.tar.gz
+tar -xvf kubecolor-linux-amd64.tar.gz
+sudo mv kubecolor /usr/local/bin/
+rm -rf kubecolor_0.5.1_linux_amd64.tar.gz LICENSE  README.md
+
 echo "set -g mouse on" >> ~/.tmux.conf
 
 echo "alias k='kubectl'" >> ~/.bashrc
+echo "alias kubectl='kubecolor'" >> ~/.bashrc
 
 source ~/.bashrc
