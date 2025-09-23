@@ -21,5 +21,5 @@ rm -rf /home/ec2-user/get_helm.sh
 
 echo "set -g mouse on" >> ~/.tmux.conf
 
-echo "alias k=kubectl" >> ~/.bashrc
+echo "alias k='kubectl'" >> ~/.bashrc
 
