@@ -106,7 +106,7 @@ else
   FLEET_CONFIG_FILE="fleet-config.json"
   cat > $FLEET_CONFIG_FILE <<EOF
 {
-  "IamFleetRole": "arn:aws:iam::384570460482:role/aws-ec2-spot-fleet-role",
+  "IamFleetRole": "arn:aws:iam::384570460482:role/all-rounder",
   "TargetCapacity": 1,
   "AllocationStrategy": "lowestPrice",
   "LaunchSpecifications": [
