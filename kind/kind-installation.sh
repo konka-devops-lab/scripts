@@ -23,3 +23,4 @@ echo "set -g mouse on" >> ~/.tmux.conf
 
 echo "alias k='kubectl'" >> ~/.bashrc
 
+source ~/.bashrc
