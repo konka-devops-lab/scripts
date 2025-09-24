@@ -29,8 +29,7 @@ echo "set -g mouse on" >> ~/.tmux.conf
 
 echo "alias k='kubectl'" >> ~/.bashrc
 echo "alias kubectl='kubecolor'" >> ~/.bashrc
-alias ls='ls --color=auto' >> ~/.bashrc
-echo "export TERM=xterm-256color" >> ~/.bashrc
+
 source ~/.bashrc
 
 rm -rf kubecolor_0.5.1_linux_amd64.tar.gz LICENSE README.md get_helm.sh
