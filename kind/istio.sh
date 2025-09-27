@@ -7,26 +7,27 @@ helm install istio-ingressgateway istio/gateway -n istio-system
 helm install istio-egressgateway istio/gateway -n istio-system
 
 
-echo "Add Kiali Helm repo and install Kiali"
-helm repo add kiali https://kiali.org/helm-charts
-helm repo update
+# echo "Add Kiali Helm repo and install Kiali"
+# helm repo add kiali https://kiali.org/helm-charts
+# helm repo update
 
-helm install kiali-server kiali/kiali-server \
-  -n istio-system \
-  --set auth.strategy="anonymous" \
-  --set external_services.prometheus.url="http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
+# helm install kiali-server kiali/kiali-server \
+#   -n istio-system \
+#   --set auth.strategy="anonymous" \
+#   --set external_services.prometheus.url="http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
+#   --set external_services.grafana.url="http://grafana.monitoring.svc.cluster.local:3000"
 
-echo "Add Jaeger Helm repo and install Jaeger"
+# echo "Add Jaeger Helm repo and install Jaeger"
 
-helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
-helm repo update
+# helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
+# helm repo update
 
-helm upgrade --install jaeger jaegertracing/jaeger \
-  -n istio-system \
-  --set storage.type=memory \
-  --set ui.enabled=true \
-  --set collector.enabled=true \
-  --set agent.enabled=true
+# helm upgrade --install jaeger jaegertracing/jaeger \
+#   -n istio-system \
+#   --set storage.type=memory \
+#   --set ui.enabled=true \
+#   --set collector.enabled=true \
+#   --set agent.enabled=true
 
 
 # helm install jaeger jaegertracing/jaeger \
