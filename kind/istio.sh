@@ -3,8 +3,8 @@ helm repo add istio https://istio-release.storage.googleapis.com/charts
 helm repo update
 helm install istio-base istio/base -n istio-system
 helm install istiod istio/istiod -n istio-system --wait
-helm install istio-ingressgateway istio/gateway -n istio-system --wait
-helm install istio-egressgateway istio/gateway -n istio-system --wait
+helm install istio-ingressgateway istio/gateway -n istio-system
+helm install istio-egressgateway istio/gateway -n istio-system
 
 
 echo "Add Kiali Helm repo and install Kiali"
@@ -21,11 +21,19 @@ echo "Add Jaeger Helm repo and install Jaeger"
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo update
 
-helm install jaeger jaegertracing/jaeger \
+helm upgrade --install jaeger jaegertracing/jaeger \
   -n istio-system \
-  --set provisionDataStore.cassandra=false \
-  --set provisionDataStore.elasticsearch=false \
+  --set storage.type=memory \
   --set ui.enabled=true \
   --set collector.enabled=true \
   --set agent.enabled=true
+
+
+# helm install jaeger jaegertracing/jaeger \
+#   -n istio-system \
+#   --set provisionDataStore.cassandra=false \
+#   --set provisionDataStore.elasticsearch=false \
+#   --set ui.enabled=true \
+#   --set collector.enabled=true \
+#   --set agent.enabled=true
 
