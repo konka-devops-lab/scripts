@@ -15,7 +15,16 @@ helm upgrade --install kiali-server kiali/kiali-server \
   -n istio-system \
   --set auth.strategy="anonymous" \
   --set external_services.prometheus.url="http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090" \
+  --set external_services.grafana.enabled=true \
+  --set external_services.grafana.in_cluster_url="http://prometheus-grafana.monitoring.svc.cluster.local:80" \
   --set external_services.grafana.external_url="http://prometheus-grafana.monitoring.svc.cluster.local:80"
+
+
+# helm upgrade --install kiali-server kiali/kiali-server \
+#   -n istio-system \
+#   --set auth.strategy="anonymous" \
+#   --set external_services.prometheus.url="http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090" \
+#   --set external_services.grafana.external_url="http://prometheus-grafana.monitoring.svc.cluster.local:80"
 
 # echo "Add Jaeger Helm repo and install Jaeger"
 
