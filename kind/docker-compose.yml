@@ -15,6 +15,7 @@ services:
       - "9000:9000"
     networks:
       - sonarnet
+    restart: unless-stopped
 
   postgres:
     image: postgres:13
