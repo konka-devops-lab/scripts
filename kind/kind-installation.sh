@@ -24,7 +24,6 @@ tar -xvf kubecolor_0.5.1_linux_amd64.tar.gz
 sudo mv kubecolor /usr/local/bin/
 
 echo "============ tmux and bash configuration ====================="
-echo "set -g default-terminal \"screen-256color\"" >> ~/.tmux.conf
 echo "set -g mouse on" >> ~/.tmux.conf
 
 echo "alias k='kubectl'" >> ~/.bashrc
