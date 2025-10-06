@@ -7,8 +7,8 @@ kubectl create namespace istio-system
 
 helm upgrade --install istio-base istio/base -n istio-system
 helm upgrade --install istiod istio/istiod -n istio-system --wait
-helm upgrade --install istio-ingressgateway istio/gateway -n istio-system
-helm upgrade --install istio-egressgateway istio/gateway -n istio-system
+# helm upgrade --install istio-ingressgateway istio/gateway -n istio-system
+# helm upgrade --install istio-egressgateway istio/gateway -n istio-system
 
 
 helm upgrade --install kiali-server kiali/kiali-server \
