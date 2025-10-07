@@ -1,4 +1,12 @@
 #!/bin/bash
+
+echo "===============ArgoCD and Prometheus Installation=========================="
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl create namespace monitoring
+helm install prometheus oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack --namespace monitoring
+
+echo "===============Istio Helm Charts Installation=============================="
 helm repo add istio https://istio-release.storage.googleapis.com/charts
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo add kiali https://kiali.org/helm-charts
@@ -27,25 +35,6 @@ helm upgrade --install jaeger jaegertracing/jaeger \
   --set persistence.enabled=false \
   --set collector.zipkinHostPort=:9411
 
-
-
-
-# helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
-# helm repo update
-
-# helm upgrade --install jaeger jaegertracing/jaeger \
-#   -n istio-system \
-#   --set storage.type=memory \
-#   --set ui.enabled=true \
-#   --set collector.enabled=true \
-#   --set agent.enabled=true
-
-
-# helm install jaeger jaegertracing/jaeger \
-#   -n istio-system \
-#   --set provisionDataStore.cassandra=false \
-#   --set provisionDataStore.elasticsearch=false \
-#   --set ui.enabled=true \
-#   --set collector.enabled=true \
-#   --set agent.enabled=true
-
+echo "====================NGINX Fabric Controller Installation==================="
+kubectl kustomize "https://github.com/nginx/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v2.1.0" | kubectl apply -f -
+helm install ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric
