@@ -1,5 +1,5 @@
 #!/bin/bash
-kubectl port-forward svc/gateway-nginx 8080:80 -n ngf-gatewayapi --address 0.0.0.0 & 
+kubectl port-forward svc/gateway-nginx -n ngf-gatewayapi --address 0.0.0.0 8080:80 & 
 # commands=(
 #   "kubectl port-forward svc/argocd-server -n argocd --address 0.0.0.0 8080:80"
 #   "kubectl port-forward svc/prometheus-grafana -n monitoring --address 0.0.0.0 8081:80"
