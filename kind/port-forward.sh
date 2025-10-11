@@ -7,7 +7,7 @@ commands=(
   "kubectl port-forward svc/dev-frontend -n instana --address 0.0.0.0 8083:80"
   "kubectl port-forward svc/kiali -n istio-system --address 0.0.0.0 8084:20001"
   "kubectl port-forward -n istio-system svc/jaeger-query --address 0.0.0.0 8087:80"
-  "kubectl port-forward -n testing svc/demo-service  --address0.0.0.0 8086:80"
+  "kubectl port-forward -n testing svc/demo-service  --address0.0.0.0.0 8086:80"
 )
 
 run_cmd() {
