@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: crud-mysql
-          image: siva9666/crud:mysql-v1
+          image: 384570460482.dkr.ecr.ap-south-1.amazonaws.com/crud:mysql-v1
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:

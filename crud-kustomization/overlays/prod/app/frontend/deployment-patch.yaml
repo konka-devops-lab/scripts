@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: crud-frontend
-          image: siva9666/crud:frontend-v1
+          image: 384570460482.dkr.ecr.ap-south-1.amazonaws.com/crud:frontend-v1
