@@ -1,22 +1,52 @@
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: crud-mysql       # Must match base name
+#   labels:
+#     environment: dev
+# spec:
+#   template:
+#     metadata:
+#       labels:
+#         app: crud-mysql   # Must match base label
+#         version: blue
+#         environment: dev
+#     spec:
+#       containers:
+#         - name: crud-mysql  # Must match base container name
+#           image: siva9666/crud:mysql-v1
+#   volumeClaimTemplates:
+#     - metadata:
+#         name: mysql-storage   # Must match base PVC name
+#       spec:
+#         storageClassName: standard
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: crud-mysql       # Must match base name
-  labels:
-    environment: dev
-spec:
-  template:
-    metadata:
-      labels:
-        app: crud-mysql   # Must match base label
-        version: blue
-        environment: dev
-    spec:
-      containers:
-        - name: crud-mysql  # Must match base container name
-          image: siva9666/crud:mysql-v1
-  volumeClaimTemplates:
-    - metadata:
-        name: mysql-storage   # Must match base PVC name
-      spec:
-        storageClassName: standard
+  name: crud-mysql
+  namespace: crud
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: crud-mysql
+    patch:
+      # Update labels
+      - op: add
+        path: /metadata/labels/environment
+        value: dev
+      - op: add
+        path: /spec/template/metadata/labels/version
+        value: blue
+      - op: add
+        path: /spec/template/metadata/labels/environment
+        value: dev
+      # Update container image
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: siva9666/crud:mysql-v1
+      # Update storageClassName
+      - op: replace
+        path: /spec/volumeClaimTemplates/0/spec/storageClassName
+        value: standard
