@@ -1,0 +1,69 @@
+env: dev
+name: payment
+protocol: http
+labels:
+  app: payment
+  tier: application
+  version: v1
+replicaCount: 1
+image:
+  repository: siva9666
+  name: payment-instana
+  tag: v1
+resources:
+  requests:
+    memory: "1Gi"
+    cpu: "800m"
+  limits:
+    memory: "2Gi"
+    cpu: "1000m"
+health_check:
+  path: /health
+probes:
+  enabled: true
+  liveness:
+    initialDelaySeconds: 10    
+    periodSeconds: 10            
+    timeoutSeconds: 2            
+    successThreshold: 1      
+    failureThreshold: 3 
+  readiness:
+    initialDelaySeconds: 10      
+    periodSeconds: 10           
+    timeoutSeconds: 2           
+    successThreshold: 1
+    failureThreshold: 3 
+
+configmap:
+  CART_HOST: "dev-cart"
+  CART_PORT: "8080"
+  USER_HOST: "dev-user"
+  USER_PORT: "8080"
+  AMQP_HOST: "dev-rabbitmq"
+hpa:
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+service:
+  port: 8080
+
+secrets:
+  enabled: true
+  list:
+    - data:
+        DB_USER: "roboshop"
+        DB_PASSWD: "roboshop123"
+
+
+ingress:
+  enabled: false
+
+
+
+

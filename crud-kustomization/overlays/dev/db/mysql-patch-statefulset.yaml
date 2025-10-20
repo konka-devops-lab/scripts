@@ -1,0 +1,24 @@
+# MySQL StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: crud-mysql
+spec:
+  template:
+    metadata:
+      labels:
+        version: blue
+    spec:
+      containers:
+        - name: crud-mysql
+          image: siva9666/crud:mysql-v1
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: standard

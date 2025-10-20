@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crud-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crud-backend
+  template:
+    metadata:
+      labels:
+        app: crud-backend
+        verion: blue
+    spec:
+      containers:
+        - name: crud-backend
+          image: siva9666/crud:backend-v1
+      
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+          
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080

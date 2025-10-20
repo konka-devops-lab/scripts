@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crud-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crud-frontend
+  template:
+    metadata:
+      labels:
+        app: crud-frontend
+        verion: blue
+    spec:
+      containers:
+        - name: crud-frontend
+          image: siva9666/crud:frontend-v1

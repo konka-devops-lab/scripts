@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.env }}-{{ .Values.name }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: {{ .Values.protocol }}-{{ .Values.env }}-{{ .Values.name }}   # ✅ Added name in <protocol>-suffix format
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort | default .Values.service.port }}
+  selector:
+    {{- toYaml .Values.labels | nindent 4 }}

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: crud-redis
+spec:
+  template:
+    metadata:
+      labels:
+        version: blue
+    spec:
+      containers:
+        - name: crud-redis
+          image: redis:alpine3.22
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: standard
