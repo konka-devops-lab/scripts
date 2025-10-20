@@ -8,3 +8,7 @@ patches:
      target:
        kind: Deployment
        name: crud-backend
+   - path: external-secrets-patch.yaml
+     target:
+       kind: ExternalSecret
+       name: external-secret-backend
