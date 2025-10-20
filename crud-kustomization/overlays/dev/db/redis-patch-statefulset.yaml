@@ -1,54 +1,24 @@
-# apiVersion: apps/v1
-# kind: StatefulSet
-# metadata:
-#   name: crud-redis       # Must match base name
-#   labels:
-#     environment: dev
-# spec:
-#   template:
-#     metadata:
-#       labels:
-#         app: crud-redis   # Must match base label
-#         version: blue
-#         environment: dev
-#     spec:
-#       containers:
-#         - name: crud-redis
-#           image: redis:alpine3.22
-
-#   volumeClaimTemplates:
-#     - metadata:
-#         name: redis-storage   # Must match base PVC name
-#       spec:
-#         storageClassName: standard
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: crud-redis
-  namespace: crud
-patchesJson6902:
-  - target:
-      group: apps
-      version: v1
-      kind: StatefulSet
-      name: crud-redis
-    patch:
-      # Update labels
-      - op: add
-        path: /metadata/labels/environment
-        value: dev
-      - op: add
-        path: /spec/template/metadata/labels/version
-        value: blue
-      - op: add
-        path: /spec/template/metadata/labels/environment
-        value: dev
-      # Update container image
-      - op: replace
-        path: /spec/template/spec/containers/0/image
-        value: redis:alpine3.22
-      # Update storageClassName
-      - op: replace
-        path: /spec/volumeClaimTemplates/0/spec/storageClassName
-        value: standard
+  name: crud-redis       # Must match base name
+  labels:
+    environment: dev
+spec:
+  template:
+    metadata:
+      labels:
+        app: crud-redis   # Must match base label
+        version: blue
+        environment: dev
+    spec:
+      containers:
+        - name: crud-redis
+          image: redis:alpine3.22
+
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-storage   # Must match base PVC name
+      spec:
+        storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
