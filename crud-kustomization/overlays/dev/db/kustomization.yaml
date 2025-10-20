@@ -5,11 +5,17 @@ resources:
   - ../../../base/mysql
   - ../../../base/redis
 patches:
-   - path: mysql-patch-statefulset.yaml
-     target:
-       kind: StatefulSet
-       name: crud-mysql
-   - path: redis-patch-statefulset.yaml
-     target:
-       kind: StatefulSet
-       name: crud-redis
+  - path: mysql-patch-statefulset.yaml
+    target:
+      kind: StatefulSet
+      name: crud-mysql
+      
+  - path: external-secret-patch.yaml
+    target:
+      kind: ExternalSecret
+      name: external-secret-mysql
+
+  - path: redis-patch-statefulset.yaml
+    target:
+      kind: StatefulSet
+      name: crud-redis

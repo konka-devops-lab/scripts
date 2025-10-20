@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: crud-backend
-          image: siva9666/crud:backend-v1
+          image: 384570460482.dkr.ecr.ap-south-1.amazonaws.com/crud:backend-v1
       
           livenessProbe:
             httpGet:
