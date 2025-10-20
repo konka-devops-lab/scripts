@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "================== External Secrets Operator Installation===================="
+echo "==================External Secrets Operator Installation===================="
 helm repo add external-secrets https://charts.external-secrets.io
 helm repo update
 
