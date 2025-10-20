@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   - backend.yaml
   - cm.yaml
-  - secrets.yaml
+  - external-secrets.yaml
   - hpa.yaml
 
