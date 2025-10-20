@@ -1,5 +1,13 @@
 #!/bin/bash
 
+echo "================== External Secrets Operator Installation===================="
+helm repo add external-secrets https://charts.external-secrets.io
+helm repo update
+
+helm install external-secrets external-secrets/external-secrets \
+  --namespace external-secrets --create-namespace \
+  --set installCRDs=true
+
 echo "===============ArgoCD and Prometheus Installation=========================="
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
