@@ -7,7 +7,7 @@ spec:
     metadata:
       labels:
         version: blue
-        env: dev
+        app: dev-crud-redis
     spec:
       containers:
         - name: crud-redis

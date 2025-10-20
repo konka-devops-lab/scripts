@@ -10,6 +10,7 @@ spec:
     metadata:
       labels:
         version: blue
+        app: dev-crud-mysql
     spec:
       containers:
         - name: crud-mysql
