@@ -20,6 +20,8 @@ spec:
         name: mysql-storage   # Must match base PVC name
       spec:
         storageClassName: standard
+        accessModes: 
+          - ReadWriteOnce
         resources:
           requests:
             storage: 1Gi
