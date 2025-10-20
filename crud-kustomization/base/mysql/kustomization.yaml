@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - mysql.yaml
-  - secrets.yaml
+  - external-secrets.yaml

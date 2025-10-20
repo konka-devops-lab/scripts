@@ -4,12 +4,16 @@ kind: Kustomization
 resources:
   - ../../../base/mysql
   - ../../../base/redis
-  - external-secret.yaml
 patches:
   - path: mysql-patch-statefulset.yaml
     target:
       kind: StatefulSet
       name: crud-mysql
+      
+  - path: external-secret-patch.yaml
+    target:
+      kind: ExternalSecret
+      name: external-secret-mysql
 
   - path: redis-patch-statefulset.yaml
     target:
