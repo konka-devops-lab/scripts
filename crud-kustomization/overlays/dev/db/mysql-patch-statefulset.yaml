@@ -20,6 +20,9 @@ spec:
                 secretKeyRef:
                   name: dev-mysql-secret
                   key: MYSQL_ROOT_PASSWORD
+          volumeMounts:
+            - name: dev-mysql-storage
+              mountPath: /var/lib/mysql
   volumeClaimTemplates:
     - metadata:
         name: dev-mysql-storage
