@@ -1,36 +1,22 @@
-# MySQL StatefulSet
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: dev-crud-mysql
+  name: crud-mysql       # Must match base name
   labels:
     environment: dev
 spec:
   template:
     metadata:
       labels:
+        app: crud-mysql   # Must match base label
         version: blue
-        app: dev-crud-mysql
+        environment: dev
     spec:
       containers:
-        - name: crud-mysql
+        - name: crud-mysql  # Must match base container name
           image: siva9666/crud:mysql-v1
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: dev-mysql-secret
-                  key: MYSQL_ROOT_PASSWORD
-          volumeMounts:
-            - name: dev-mysql-storage
-              mountPath: /var/lib/mysql
   volumeClaimTemplates:
     - metadata:
-        name: dev-mysql-storage
+        name: mysql-storage   # Must match base PVC name
       spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
         storageClassName: standard
