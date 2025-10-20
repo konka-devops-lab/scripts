@@ -9,6 +9,11 @@ patches:
     target:
       kind: StatefulSet
       name: crud-mysql
+
+  - path: mysql-service-patch.yaml
+    target:
+      kind: Service
+      name: crud-mysql
       
   - path: external-secret-patch.yaml
     target:
@@ -18,4 +23,9 @@ patches:
   - path: redis-patch-statefulset.yaml
     target:
       kind: StatefulSet
+      name: crud-redis
+
+  - path: redis-patch-service.yaml
+    target:
+      kind: Service
       name: crud-redis
