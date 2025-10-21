@@ -20,7 +20,7 @@ labels:
 # Change image tag for dev
 images:
   - name: crud-mysql
-    newName: crud
+    newName: siva9666/crud
     newTag: mysql-v1
 
 # Apply patches
