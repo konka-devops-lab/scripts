@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/backend
+
+namePrefix: dev-
+
+labels:
+  - pairs:
+      env: dev
+      argocd: "true"
+      version: blue
+      app: crud-backend
+
+images:
+  - name: crud-backend
+    newName: siva9666/crud
+    newTag: backend-v1
+
+patches:
+
+  - path: configmap-patch.yaml
+    target:
+      kind: ConfigMap
+      name: crud-config
+
+  - path: external-secret-patch.yaml
+    target:
+      kind: ExternalSecret
+      name: external-secret-backend
+
+  - path: hpa-patch.yaml
+    target:
+      kind: HorizontalPodAutoscaler
+      name: crud-backend-hpa

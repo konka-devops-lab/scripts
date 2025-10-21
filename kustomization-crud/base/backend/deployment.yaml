@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crud-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crud-backend
+  template:
+    metadata:
+      labels:
+        app: crud-backend
+    spec:
+      containers:
+        - name: crud-backend
+          image: backend:dev-v1
+          ports:
+            - containerPort: 8080
+
+          # Environment variables (example hybrid approach)
+          envFrom:
+            - configMapRef:
+                name: crud-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backend-crud-secrets
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-crud-secrets
+                  key: MYSQL_PASSWORD
+
+          # Resource requests and limits
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "800m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+
+          # Liveness probe (checks if app is alive)
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10    
+            periodSeconds: 10            
+            timeoutSeconds: 2            
+            successThreshold: 1      
+            failureThreshold: 3 
+
+          # Readiness probe (checks if app is ready to serve traffic)
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10    
+            periodSeconds: 10            
+            timeoutSeconds: 2            
+            successThreshold: 1      
+            failureThreshold: 3 

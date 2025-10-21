@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crud-config
+data:
+  DB_HOST: dev-crud-mysql
+  REDIS_HOST: dev-crud-redis
