@@ -5,5 +5,5 @@ metadata:
 data:
   DB_NAME: crud_app
   DB_HOST: crud-mysql
-  REDIS_HOST: crud-redis
-  REDIS_SSL: "false"
+  SPRING_REDIS_HOST: crud-redis
+  SPRING_REDIS_SSL: "false"
