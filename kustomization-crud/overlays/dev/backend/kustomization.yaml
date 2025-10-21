@@ -15,7 +15,7 @@ labels:
       app: crud-backend
 
 images:
-  - name: crud-backend
+  - name: backend-dev
     newName: siva9666/crud
     newTag: backend-v1
 

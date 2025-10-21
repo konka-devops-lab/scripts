@@ -3,4 +3,5 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: crud-backend-hpa
 spec:
+  minReplicas: 2
   maxReplicas: 2
