@@ -7,7 +7,8 @@ resources:
 namePrefix: dev-
 
 labels:
-  - pairs:
+  - includeSelectors: true
+    pairs:
       env: dev
       argocd: "true"
       version: blue
