@@ -1,0 +1,34 @@
+# overlays/dev/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Reference base
+resources:
+  - ../../../base/mysql
+
+# Add dev prefix to all resource names
+namePrefix: dev-
+
+# Add common labels to all resources
+commonLabels:
+  env: dev
+  argocd: "true"
+  version: blue
+  app: crud-mysql
+
+# Change image tag for dev
+images:
+  - name: crud-mysql
+    newName: crud
+    newTag: mysql-v1
+
+# Apply patches
+patches:
+  - path: storage-patch.yaml
+    target:
+      kind: StatefulSet
+      name: crud-mysql
+  - path: external-secret-patch.yaml
+    target:
+      kind: ExternalSecret
+      name: external-secret-mysql

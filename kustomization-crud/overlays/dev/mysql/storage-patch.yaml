@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: crud-mysql
+spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+      spec:
+        storageClassName: standard
