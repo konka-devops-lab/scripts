@@ -11,10 +11,11 @@ namePrefix: dev-
 
 # Add common labels to all resources
 labels:
-  env: dev
-  argocd: "true"
-  version: blue
-  app: crud-mysql
+  - pairs:
+      env: dev
+      argocd: "true"
+      version: blue
+      app: crud-mysql
 
 # Change image tag for dev
 images:
