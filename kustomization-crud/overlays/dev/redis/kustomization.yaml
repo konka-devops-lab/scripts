@@ -6,21 +6,13 @@ resources:
 
 namePrefix: dev-
 
-# commonLabels:
-#   org: KodeKloud
-
-# labels:
-#   - pairs:
-#       env: dev
-#       argocd: "true"
-#       version: blue
-#       app: crud-redis
-
-commonLabels:
-  env: dev
-  argocd: "true"
-  version: blue
-  app: crud-redis
+labels:
+  - includeSelectors: true
+    pairs:
+      env: dev
+      argocd: "true"
+      version: blue
+      app: crud-redis
 
 patches:
   - path: storage-patch.yaml
