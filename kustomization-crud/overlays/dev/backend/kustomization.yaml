@@ -25,7 +25,7 @@ patches:
       kind: ConfigMap
       name: crud-config
 
-  - path: external-secret-patch.yaml
+  - path: external-secret.yaml
     target:
       kind: ExternalSecret
       name: external-secret-backend
