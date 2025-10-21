@@ -10,7 +10,7 @@ resources:
 namePrefix: dev-
 
 # Add common labels to all resources
-commonLabels:
+labels:
   env: dev
   argocd: "true"
   version: blue
