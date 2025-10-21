@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: crud-backend
-          image: backend:dev-v1
+          image: backend-dev:v1
           ports:
             - containerPort: 8080
 
