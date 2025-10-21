@@ -7,11 +7,12 @@ resources:
 namePrefix: dev-
 
 labels:
-  - pairs:
+  - includeSelectors: true
+    pairs:
       env: dev
       argocd: "true"
       version: blue
-      app: crud-mysql
+      app: crud-redis
 
 images:
   - name: crud-mysql
