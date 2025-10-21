@@ -1,15 +1,11 @@
-# overlays/dev/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Reference base
 resources:
   - ../../../base/mysql
 
-# Add dev prefix to all resource names
 namePrefix: dev-
 
-# Add common labels to all resources
 labels:
   - pairs:
       env: dev
@@ -17,13 +13,11 @@ labels:
       version: blue
       app: crud-mysql
 
-# Change image tag for dev
 images:
   - name: crud-mysql
     newName: siva9666/crud
     newTag: mysql-v1
 
-# Apply patches
 patches:
   - path: storage-patch.yaml
     target:
