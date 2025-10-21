@@ -22,8 +22,6 @@ chown -R ec2-user:ec2-user /home/ec2-user/scripts
 
 rm -rf /home/ec2-user/get_helm.sh
 
-git clone https://github.com/konka-devops-lab/k8s-administration.git /home/ec2-user/k8s-administration
-chown -R ec2-user:ec2-user /home/ec2-user/k8s-administration
 
 
 # - --kubelet-insecure-tls
