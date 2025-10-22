@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crud-frontend-nginx
+data:
+  nginx.conf: |
+    server {
+        location /api/ {
+            proxy_pass http://dev-crud-backend:8080;
+        }
+    }

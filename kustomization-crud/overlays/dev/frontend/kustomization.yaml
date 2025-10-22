@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/frontend
+
+namePrefix: dev-
+
+labels:
+  - includeSelectors: true
+    pairs:
+      env: dev
+      argocd: "true"
+      version: blue
+      app: crud-frontend
+
+images:
+  - name: crud-frontend
+    newName: siva9666/crud
+    newTag: frontend-v1
+
+
+patches:
+  - path: configmap-patch.yaml
+    target:
+      kind: ConfigMap
+      name: crud-frontend-nginx
