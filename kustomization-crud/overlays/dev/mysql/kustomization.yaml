@@ -20,7 +20,7 @@ images:
     newTag: mysql-v1
 
 patches:
-  - path: storage-patch.yaml
+  - path: mysql-patch.yaml
     target:
       kind: StatefulSet
       name: crud-mysql
