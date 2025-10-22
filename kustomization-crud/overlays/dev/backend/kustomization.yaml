@@ -37,7 +37,7 @@ patches:
       kind: HorizontalPodAutoscaler
       name: crud-backend-hpa
 
-  - path: secret-patch.yaml
+  - path: secret-ref-patch.yaml
     target:
       kind: Deloyment
       name: crud-backend
