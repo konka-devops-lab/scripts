@@ -20,22 +20,8 @@ images:
     newTag: frontend-v1
 
 
-# patches:
-#   - path: configmap-patch.yaml
-#     target:
-#       kind: ConfigMap
-#       name: crud-frontend
-
-replacements:
-  - source:
-      kind: Service
-      name: crud-backend
-      fieldPath: metadata.name
-    targets:
-      - select:
-          kind: ConfigMap
-          name: crud-frontend
-        fieldPaths:
-          - data.[nginx.conf]
-        options:
-          create: false
+patches:
+  - path: configmap-patch.yaml
+    target:
+      kind: ConfigMap
+      name: crud-frontend
