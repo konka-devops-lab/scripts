@@ -32,11 +32,6 @@ patches:
       kind: ExternalSecret
       name: external-secret-backend
 
-  - path: hpa-patch.yaml
-    target:
-      kind: HorizontalPodAutoscaler
-      name: crud-backend-hpa
-
   - path: secret-ref-patch.yaml
     target:
       kind: Deployment

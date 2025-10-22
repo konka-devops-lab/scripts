@@ -48,9 +48,9 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            initialDelaySeconds: 40    
+            initialDelaySeconds: 30   
             periodSeconds: 10            
-            timeoutSeconds: 2            
+            timeoutSeconds: 5            
             successThreshold: 1      
             failureThreshold: 3 
 
@@ -59,8 +59,8 @@ spec:
             httpGet:
               path: /health
               port: 8080
-            initialDelaySeconds: 40   
+            initialDelaySeconds: 30
             periodSeconds: 10            
-            timeoutSeconds: 2            
+            timeoutSeconds: 5            
             successThreshold: 1      
             failureThreshold: 3 
