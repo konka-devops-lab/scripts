@@ -3,6 +3,15 @@ kind: StatefulSet
 metadata:
   name: crud-mysql
 spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+      spec:
+        storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
   template:
     spec:
       containers:
@@ -13,12 +22,3 @@ spec:
             secretKeyRef:
               name: dev-crud-mysql-secret
               key: MYSQL_ROOT_PASSWORD
-              
-  volumeClaimTemplates:
-    - metadata:
-        name: mysql-storage
-        storageClassName: standard
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
