@@ -24,4 +24,4 @@ patches:
   - path: configmap-patch.yaml
     target:
       kind: ConfigMap
-      name: crud-frontend-nginx
+      name: crud-frontend

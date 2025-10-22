@@ -56,4 +56,4 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: crud-frontend-nginx
+            name: crud-frontend
