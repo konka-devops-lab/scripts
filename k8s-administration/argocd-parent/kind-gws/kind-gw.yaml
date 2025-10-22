@@ -1,0 +1,72 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: http-routes-gw
+#   namespace: argocd
+# spec:
+#   generators:
+#     - list:
+#         elements:
+#           - name: argocd
+#             path: http-path-routing
+#             file: argocd.yaml
+#             namespace: argocd
+#             server: https://kubernetes.default.svc
+
+#           - name: grafana
+#             path: http-path-routing
+#             file: grafana.yaml
+#             namespace: monitoring
+#             server: https://kubernetes.default.svc
+
+#           - name: instana
+#             path: http-path-routing
+#             file: instana.yaml
+#             namespace: instana
+#             server: https://kubernetes.default.svc
+
+#           - name: kiali
+#             path: http-path-routing
+#             file: kiali.yaml
+#             namespace: istio-system
+#             server: https://kubernetes.default.svc
+
+#           - name: jaeger
+#             path: http-path-routing
+#             file: jaeger.yaml
+#             namespace: istio-system
+#             server: https://kubernetes.default.svc
+
+#           - name: kibana
+#             path: http-path-routing
+#             file: kibana.yaml
+#             namespace: logging
+#             server: https://kubernetes.default.svc
+
+#           - name: testing
+#             path: http-path-routing
+#             file: testing.yaml
+#             namespace: testing
+#             server: https://kubernetes.default.svc
+
+#           # - name: kind-gw
+#           #   path: kind-gw
+#           #   file: nginx-fabric-gw.yaml
+#           #   namespace: ngf-gatewayapi
+#           #   server: https://kubernetes.default.svc
+#   template:
+#     metadata:
+#       name: '{{name}}'
+#     spec:
+#       project: kind-gw
+#       source:
+#         repoURL: 'https://github.com/konka-devops-lab/k8s-administration.git'
+#         targetRevision: HEAD
+#         path: '{{path}}'
+#       destination:
+#         server: '{{server}}'
+#         namespace: '{{namespace}}'
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true

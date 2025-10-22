@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: testing
+  namespace: argocd
+spec:
+  description: testing project
+  sourceRepos:
+    - 'https://github.com/konka-devops-lab/k8s-administration.git'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: single-app
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - appName: my-app
+            namespace: testing
+  template:
+    metadata:
+      name: '{{appName}}'
+    spec:
+      project: testing
+      source:
+        repoURL: 'https://github.com/konka-devops-lab/k8s-administration.git'
+        targetRevision: HEAD
+        path: 'app'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend
+  namespace: argocd           # where ArgoCD is installed
+spec:
+  project: instana
+  source:
+    repoURL: 'https://github.com/konka-devops-lab/instana-helmcharts.git' # your repo
+    targetRevision: HEAD                                         # branch/tag
+    path: instana-app                                                  # path to chart inside repo
+    helm:
+      valueFiles:
+        - dev/frontend.yaml     # add whichever value files you need
+  destination:
+    server: 'https://kubernetes.default.svc' # cluster ArgoCD is in
+    namespace: instana                   # target namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

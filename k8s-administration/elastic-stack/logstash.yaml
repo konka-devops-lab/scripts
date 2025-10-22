@@ -1,0 +1,340 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: logging
+data:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    xpack.monitoring.enabled: false
+  
+  logstash.conf: |
+    input {
+      beats {
+        port => 5044
+      }
+    }
+
+    filter {
+      # Add service identification based on container name
+      if [kubernetes][container][name] {
+        mutate {
+          add_field => { 
+            "service_name" => "%{[kubernetes][container][name]}"
+            "service_namespace" => "%{[kubernetes][namespace]}"
+            "service_pod" => "%{[kubernetes][pod][name]}"
+          }
+        }
+      }
+
+      # Identify health check requests early - FIXED SYNTAX
+      if [message] =~ /health|healthcheck|ready|live|probe|status/ {
+        mutate {
+          add_field => { "is_health_check" => "true" }
+        }
+      }
+
+      # Parse JSON messages (common for structured logs)
+      if [message] =~ /^{.*}$/ {
+        json {
+          source => "message"
+          target => "parsed_message"
+        }
+        
+        # Also check parsed JSON for health indicators
+        if [parsed_message][msg] =~ /health|ready|live/ or [parsed_message][endpoint] =~ /health|ready|live/ {
+          mutate {
+            add_field => { "is_health_check" => "true" }
+          }
+        }
+      }
+
+      # Service-specific filters with health check integration
+      if [kubernetes][container][name] == "mongo" {
+        # MongoDB JSON logs
+        if [parsed_message] {
+          grok {
+            match => { 
+              "[parsed_message][msg]" => [
+                "%{WORD:mongo_operation} %{WORD:mongo_operation_type}",
+                "%{GREEDYDATA:mongo_message}"
+              ]
+            }
+          }
+        }
+      }
+
+      if [kubernetes][container][name] == "mysql" {
+        # MySQL error log pattern
+        grok {
+          match => { 
+            "message" => [
+              "%{NUMBER:timestamp} \[%{WORD:severity}\] %{GREEDYDATA:mysql_message}",
+              "%{TIMESTAMP_ISO8601:timestamp} %{NUMBER:thread_id} \[%{WORD:severity}\] %{GREEDYDATA:mysql_message}"
+            ]
+          }
+        }
+      }
+
+      if [kubernetes][container][name] == "redis" {
+        # Redis log pattern
+        grok {
+          match => { 
+            "message" => [
+              "%{NUMBER:timestamp} \[%{NUMBER}\] %{GREEDYDATA:redis_message}",
+              "%{MONTHDAY} %{MONTH} %{HOUR}:%{MINUTE}:%{SECOND}\.%{NUMBER} %{WORD:level} %{GREEDYDATA:redis_message}"
+            ]
+          }
+        }
+      }
+
+      if [kubernetes][container][name] == "rabbitmq" {
+        # RabbitMQ log pattern
+        grok {
+          match => { 
+            "message" => [
+              "=%{WORD:rabbitmq_level}=== %{GREEDYDATA:rabbitmq_message}",
+              "%{TIMESTAMP_ISO8601:timestamp} \[%{WORD:level}\] %{GREEDYDATA:rabbitmq_message}"
+            ]
+          }
+        }
+      }
+
+      # Node.js Applications (catalogue, cart, user)
+      if [kubernetes][container][name] =~ /catalogue|cart|user/ {
+        # Node.js/Express logs
+        grok {
+          match => { 
+            "message" => [
+              # HTTP request logs
+              "%{IP:client_ip} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:http_method} %{URIPATHPARAM:endpoint} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:response_size}",
+              # JSON formatted logs
+              "\"method\":\"%{WORD:http_method}\".*\"url\":\"%{URIPATHPARAM:endpoint}\".*\"status\":%{NUMBER:response_code}",
+              # Simple message pattern
+              "%{LOGLEVEL:log_level}.*%{GREEDYDATA:log_message}"
+            ]
+          }
+        }
+        
+        # Extract response time if present
+        grok {
+          match => { "message" => "(%{NUMBER:response_time}ms)" }
+        }
+        
+        # Tag health endpoints for Node.js apps
+        if [endpoint] =~ /health|ready|live/ {
+          mutate {
+            add_field => { "is_health_check" => "true" }
+          }
+        }
+      }
+
+      # Java Application (shipping)
+      if [kubernetes][container][name] == "shipping" {
+        # Java/Spring Boot logs
+        grok {
+          match => { 
+            "message" => [
+              # Spring Boot default format
+              "%{TIMESTAMP_ISO8601:timestamp} %{LOGLEVEL:log_level} %{NUMBER:pid} --- \[%{DATA:thread}\] %{DATA:class} : %{GREEDYDATA:log_message}",
+              # Logback pattern
+              "%{TIMESTAMP_ISO8601:timestamp} %{WORD:level} %{DATA:logger} - %{GREEDYDATA:message}",
+              # HTTP requests in Spring
+              "method=%{WORD:http_method}, path=%{URIPATHPARAM:endpoint}, status=%{NUMBER:response_code}"
+            ]
+          }
+        }
+        
+        # Extract HTTP details from Java logs
+        grok {
+          match => { 
+            "[message]" => [
+              "method=%{WORD:http_method}.*path=%{URIPATHPARAM:endpoint}.*status=%{NUMBER:response_code}",
+              "GET|POST|PUT|DELETE %{URIPATHPARAM:endpoint}.*%{NUMBER:response_code}"
+            ]
+          }
+        }
+        
+        # Tag health endpoints for Java apps
+        if [endpoint] =~ /health|ready|live|actuator/ {
+          mutate {
+            add_field => { "is_health_check" => "true" }
+          }
+        }
+      }
+
+      # Python Application (payment)
+      if [kubernetes][container][name] == "payment" {
+        # Python/Django/Flask logs
+        grok {
+          match => { 
+            "message" => [
+              # Django request logs
+              "\[%{TIMESTAMP_ISO8601:timestamp}\] \"%{WORD:http_method} %{URIPATHPARAM:endpoint} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:response_size}",
+              # Python logging format
+              "%{TIMESTAMP_ISO8601:timestamp} - %{WORD:log_level} - %{GREEDYDATA:log_message}",
+              # Flask/Werkzeug
+              "%{IP:client_ip} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:http_method} %{URIPATHPARAM:endpoint} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code}"
+            ]
+          }
+        }
+        
+        # Tag health endpoints for Python apps
+        if [endpoint] =~ /health|ready|live|status/ {
+          mutate {
+            add_field => { "is_health_check" => "true" }
+          }
+        }
+      }
+
+      # Nginx (frontend)
+      if [kubernetes][container][name] == "frontend" {
+        # Nginx access logs
+        grok {
+          match => { 
+            "message" => [
+              # Nginx combined format
+              "%{IPORHOST:client_ip} - %{USER:ident} \[%{HTTPDATE:timestamp}\] \"%{WORD:http_method} %{URIPATHPARAM:endpoint} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:response_size}",
+              # Nginx main format
+              "%{IPORHOST:client_ip} - - \[%{HTTPDATE:timestamp}\] \"%{WORD:http_method} %{URIPATHPARAM:endpoint} HTTP/%{NUMBER:http_version}\" %{NUMBER:response_code} %{NUMBER:response_size}",
+              # Error logs
+              "%{YEAR}/%{MONTHNUM}/%{MONTHDAY} %{TIME} \[%{WORD:log_level}\] %{NUMBER:pid}#%{NUMBER}: %{GREEDYDATA:error_message}"
+            ]
+          }
+        }
+        
+        # Extract request time from nginx
+        grok {
+          match => { "message" => "request_time=%{NUMBER:request_time}" }
+        }
+        
+        # Tag health endpoints for Nginx
+        if [endpoint] =~ /health|ready|live|status|ping/ {
+          mutate {
+            add_field => { "is_health_check" => "true" }
+          }
+        }
+      }
+
+      # Enhanced health check processing
+      if [is_health_check] == "true" {
+        # Extract health check specific information
+        grok {
+          match => { 
+            "message" => [
+              "%{WORD:http_method}.*/health.*%{NUMBER:response_code}",
+              "%{WORD:http_method}.*/ready.*%{NUMBER:response_code}",
+              "%{WORD:http_method}.*/live.*%{NUMBER:response_code}",
+              "Health check %{WORD:health_status}",
+              "probe.*%{WORD:probe_type}.*%{WORD:health_status}"
+            ]
+          }
+        }
+        
+        mutate {
+          add_field => { 
+            "metric_type" => "health_check"
+          }
+        }
+        
+        # Normalize health check status
+        if [response_code] in ["200", "201", "204"] {
+          mutate { add_field => { "health_status" => "healthy" } }
+        } else if [response_code] in ["401", "403", "404"] {
+          mutate { add_field => { "health_status" => "degraded" } }
+        } else if [response_code] in ["500", "502", "503"] {
+          mutate { add_field => { "health_status" => "unhealthy" } }
+        } else if [health_status] {
+          # Use existing health_status if available
+          mutate { 
+            lowercase => [ "health_status" ]
+          }
+        }
+      }
+
+      # Convert numeric fields
+      mutate {
+        convert => { 
+          "response_code" => "integer"
+          "response_size" => "integer" 
+          "response_time" => "float"
+          "request_time" => "float"
+          "pid" => "integer"
+          "thread_id" => "integer"
+        }
+      }
+
+      # Add timestamp parsing if not already parsed
+      if [timestamp] {
+        date {
+          match => [ "timestamp", "ISO8601", "YYYY/MM/dd HH:mm:ss", "dd/MMM/YYYY:HH:mm:ss Z" ]
+          target => "@timestamp"
+        }
+      }
+
+      # Clean up fields
+      mutate {
+        remove_field => [ "timestamp" ]
+      }
+    }
+
+    output {
+      # Main logs index for all logs
+      elasticsearch {
+        hosts => ["http://elasticsearch.logging.svc.cluster.local:9200"]
+        index => "microservice-logs-%{+YYYY.MM.dd}"
+      }
+      
+      # Optional: Debug output
+      stdout { 
+        codec => rubydebug 
+      }
+    }
+    
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.15.0
+        ports:
+        - containerPort: 5044   # Beats input
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+        - name: config
+          mountPath: /usr/share/logstash/pipeline/logstash.conf
+          subPath: logstash.conf
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  ports:
+  - port: 5044
+    targetPort: 5044
+    protocol: TCP
+  selector:
+    app: logstash

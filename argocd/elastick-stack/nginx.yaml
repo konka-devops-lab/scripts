@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-kibana
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-kibana
+  template:
+    metadata:
+      labels:
+        app: nginx-kibana
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-kibana-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-kibana-conf
+  namespace: logging
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        server_name kibana.example.com;
+
+        location / {
+            proxy_pass http://kibana:5601;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-kibana
+  namespace: logging
+spec:
+  selector:
+    app: nginx-kibana
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd           # where ArgoCD is installed
+spec:
+  project: instana
+  source:
+    repoURL: 'https://github.com/konka-devops-lab/crud-kustomization.git' # your repo
+    targetRevision: HEAD                                         # branch/tag
+    path: overlays                                                  # path to chart inside repo
+    helm:
+      valueFiles:
+        - dev/db/kustomization.yaml
+  destination:
+    server: 'https://kubernetes.default.svc' # cluster ArgoCD is in
+    namespace: instana                   # target namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,100 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: parent-appset
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/konka-devops-lab/k8s-administration.git
+        revision: main
+        files:
+          - path: namespaces/*.yaml
+          - path: rbac/*.yaml
+          - path: storage-classes/*.yaml
+          - path: metrics-server/*.yaml
+          - path: kind-gw/*.yaml
+          - path: http-path-routing/*.yaml      
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/konka-devops-lab/k8s-administration.git
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: instana
+  namespace: argocd
+spec:
+  description: Instana project
+  sourceRepos:
+    - 'https://github.com/konka-devops-lab/instana-helmcharts.git'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: crud
+  namespace: argocd
+spec:
+  description: Crud project
+  sourceRepos:
+    - 'https://github.com/konka-devops-lab/crud-kustomization.git'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: elastic-stack
+  namespace: argocd
+spec:
+  description: Elastic Stack Project
+  sourceRepos:
+    - 'https://github.com/konka-devops-lab/k8s-administration.git'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+# apiVersion: argoproj.io/v1alpha1
+# kind: AppProject
+# metadata:
+#   name: kind-gw
+#   namespace: argocd
+# spec:
+#   description: kind-gw project
+#   sourceRepos:
+#     - 'https://github.com/konka-devops-lab/k8s-administration.git'
+#   destinations:
+#     - namespace: '*'
+#       server: '*'
+#   clusterResourceWhitelist:
+#     - group: '*'
+#       kind: '*'

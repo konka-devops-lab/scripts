@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: elastic-stack
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - name: elasticsearch
+        file: elasticsearch.yaml
+      - name: kibana
+        file: kibana.yaml
+      - name: logstash
+        file: logstash.yaml
+      - name: filebeat
+        file: filebeat.yaml
+      - name: nginx
+        file: nginx.yaml
+  template:
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: elastic-stack
+      source:
+        repoURL: 'https://github.com/konka-devops-lab/k8s-administration.git'
+        targetRevision: HEAD
+        path: elastic-stack
+        directory:
+          include: '{{file}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: logging
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
