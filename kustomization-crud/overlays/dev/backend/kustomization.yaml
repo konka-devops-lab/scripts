@@ -39,5 +39,5 @@ patches:
 
   - path: secret-ref-patch.yaml
     target:
-      kind: Deloyment
+      kind: Deployment
       name: crud-backend
