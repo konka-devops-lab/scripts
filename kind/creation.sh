@@ -1,7 +1,7 @@
 #!/bin/bash
 
-kind create cluster --config dev-cluster.yaml --name dev
-kind create cluster --config prod-cluster.yaml --name prod
+kind create cluster --config dev-cluster.yaml
+kind create cluster --config prod-cluster.yaml
 
 
 # How multiple cluster works with kubeconfig
