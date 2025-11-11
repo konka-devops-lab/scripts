@@ -3,13 +3,13 @@ import os
 import time
 
 # Initialize Session with your AWS profile
-session = boto3.Session(profile_name='eks-siva.bapatlas.site')
-
+# session = boto3.Session(profile_name='eks-siva.bapatlas.site')
+session = boto3.Session()
 # Create S3 client using the profile from the session
 s3 = session.client('s3')
 
 # Configuration
-bucket_name = 'classes-bapatals-site'
+bucket_name = 'videos-konka'
 file_name = input('Enter the file name to upload: ').strip()
 
 # Validate the file name
