@@ -1,15 +1,37 @@
----
+cat > kind-dev-advanced.yaml << EOF
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+name: dev-cluster
 nodes:
 - role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "env=dev,node-type=control-plane"
 - role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "env=dev,node-type=worker"
 - role: worker
-
-
-# - --kubelet-insecure-tls
-# kubectl port-forward svc/argocd-server --address 0.0.0.0 8080:443 &
-
-#  k get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-
-# timeout.reconciliation: 60s
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "env=dev,node-type=worker"
+- role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "env=dev,node-type=worker"
+networking:
+  serviceSubnet: "10.96.0.0/16"
+  podSubnet: "10.244.0.0/16"
+EOF
