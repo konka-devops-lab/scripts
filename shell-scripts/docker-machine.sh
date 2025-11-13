@@ -4,8 +4,8 @@
 echo "Please enter the DNS record name (e.g., docker.ullagallu.in): "
 read NAME
 
-HOSTED_ZONE_ID="Z03345832QRDQYLQ53NTN"  
-RECORD_NAME="${NAME}.ullagallu.in"
+HOSTED_ZONE_ID="Z05358812YCB33LWR8F1V"  
+RECORD_NAME="${NAME}.konka.online"
 
 # Step 1: Prompt for the instance type
 echo "Please enter the instance type (e.g., t3a.medium, t3.medium.......): "
