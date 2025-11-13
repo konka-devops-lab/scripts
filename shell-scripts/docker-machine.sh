@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-echo "Please enter the DNS record name (e.g., docker.ullagallu.in): "
+echo "Please enter the DNS record name (e.g., docker.konka.online): "
 read NAME
 
 HOSTED_ZONE_ID="Z05358812YCB33LWR8F1V"  
