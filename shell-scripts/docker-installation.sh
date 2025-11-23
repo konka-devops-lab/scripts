@@ -85,6 +85,9 @@ rm -rf /home/ec2-user/scripts
 git clone https://github.com/konka-devops-lab/scripts.git /home/ec2-user/scripts
 chown -R ec2-user:ec2-user /home/ec2-user/scripts
 
+git clone https://github.com/konka-devops-lab/crud-app.git /home/ec2-user/crud-app
+chown -R ec2-user:ec2-user /home/ec2-user/crud-app
+
 ##############################################
 # Version Checks (for debugging and validation)
 ##############################################
