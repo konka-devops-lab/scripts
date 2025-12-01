@@ -3,7 +3,6 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     user: root
-    restart: always
     environment:
       - JENKINS_OPTS=--prefix=/
     volumes:
@@ -13,7 +12,6 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
-    restart: always
     ports:
       - "80:80"
     volumes:
