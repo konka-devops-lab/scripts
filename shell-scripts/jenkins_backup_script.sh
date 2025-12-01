@@ -11,8 +11,17 @@ S3_BUCKET="s3://ullagalliu-artifacts/jenkins_folder"
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 BACKUP_FILE="/tmp/jenkins-backup-$TIMESTAMP.tar.gz"
 
+echo "++++ Dynamically fetch container name ++++"
+
+CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep -i jenkins | head -1)
+
+if [ -z "$CONTAINER_NAME" ]; then
+  echo "ERROR: No Jenkins container found."
+  exit 1
+fi
+
 echo "=== Stopping Jenkins container for clean backup ==="
-docker stop jenkins || true
+docker stop $CONTAINER_NAME || true
 
 echo "=== Creating Jenkins backup archive ==="
 tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
