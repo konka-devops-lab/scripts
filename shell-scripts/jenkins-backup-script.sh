@@ -20,14 +20,16 @@ if [ -z "$CONTAINER_NAME" ]; then
   exit 1
 fi
 
+echo "Using Jenkins container: $CONTAINER_NAME"
+
 echo "=== Stopping Jenkins container for clean backup ==="
-docker stop $CONTAINER_NAME || true
+docker stop "$CONTAINER_NAME" || true
 
 echo "=== Creating Jenkins backup archive ==="
 sudo tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
 
 echo "=== Starting Jenkins container again ==="
-docker start jenkins
+docker start "$CONTAINER_NAME"
 
 echo "=== Uploading backup to S3 ==="
 aws s3 cp "$BACKUP_FILE" "$S3_BUCKET/"
