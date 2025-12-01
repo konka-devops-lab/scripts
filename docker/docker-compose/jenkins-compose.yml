@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       - JENKINS_OPTS=--prefix=/
+    user: "1000:1000"
     volumes:
       - /home/ec2-user/jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
