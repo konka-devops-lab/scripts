@@ -24,7 +24,7 @@ echo "=== Stopping Jenkins container for clean backup ==="
 docker stop $CONTAINER_NAME || true
 
 echo "=== Creating Jenkins backup archive ==="
-tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
+sudo tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
 
 echo "=== Starting Jenkins container again ==="
 docker start jenkins
