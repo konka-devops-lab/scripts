@@ -2,10 +2,10 @@
 set -e
 
 # Jenkins Docker volume path
-VOLUME_PATH="/jenkins_data"
+VOLUME_PATH="/home/ec2-user/jenkins_data"
 
 # S3 bucket
-S3_BUCKET="s3://ullagalliu-artifacts/jenkins_folder/"
+S3_BUCKET="s3://ullagalliu-artifacts/jenkins_folder"
 
 # Temporary backup file
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")

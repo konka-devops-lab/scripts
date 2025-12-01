@@ -7,7 +7,7 @@ services:
     environment:
       - JENKINS_OPTS=--prefix=/
     volumes:
-      - /jenkins_data:/var/jenkins_home
+      - /home/ec2-user/jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
 
   nginx:
