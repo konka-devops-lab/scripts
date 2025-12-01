@@ -33,6 +33,6 @@ echo "=== Uploading backup to S3 ==="
 aws s3 cp "$BACKUP_FILE" "$S3_BUCKET/"
 
 echo "=== Cleaning temporary files ==="
-rm -f "$BACKUP_FILE"
+sudo rm -f "$BACKUP_FILE"
 
 echo "=== Jenkins backup completed successfully ==="
