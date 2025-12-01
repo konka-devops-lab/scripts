@@ -1,29 +1,29 @@
 #!/bin/bash
-
 set -e
 
-# ====== CONFIGURATION ======
-JENKINS_HOME="/jenkins_data"
+# Jenkins Docker volume path
+VOLUME_PATH="/jenkins_data"
+
+# S3 bucket
 S3_BUCKET="s3://ullagalliu-artifacts/jenkins_folder/"
-BACKUP_DIR="/tmp"
+
+# Temporary backup file
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-BACKUP_FILE="$BACKUP_DIR/jenkins-backup-$TIMESTAMP.tar.gz"
-# ============================
+BACKUP_FILE="/tmp/jenkins-backup-$TIMESTAMP.tar.gz"
 
-echo "Creating Jenkins backup..."
+echo "=== Stopping Jenkins container for clean backup ==="
+docker stop jenkins || true
 
-# Create compressed backup
-tar -czf "$BACKUP_FILE" "$JENKINS_HOME"
+echo "=== Creating Jenkins backup archive ==="
+tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
 
-echo "Backup created at: $BACKUP_FILE"
+echo "=== Starting Jenkins container again ==="
+docker start jenkins
 
-# Upload to S3
-echo "Uploading backup to S3..."
+echo "=== Uploading backup to S3 ==="
 aws s3 cp "$BACKUP_FILE" "$S3_BUCKET/"
 
-echo "Backup uploaded to S3 successfully."
-
-# Clean up
+echo "=== Cleaning temporary files ==="
 rm -f "$BACKUP_FILE"
 
-echo "Backup process completed."
+echo "=== Jenkins backup completed successfully ==="
