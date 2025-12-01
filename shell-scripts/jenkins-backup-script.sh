@@ -26,7 +26,7 @@ echo "=== Stopping Jenkins container for clean backup ==="
 docker stop "$CONTAINER_NAME" || true
 
 echo "=== Creating Jenkins backup archive ==="
-sudo tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
+tar -czf "$BACKUP_FILE" -C "$VOLUME_PATH" .
 
 echo "=== Starting Jenkins container again ==="
 docker start "$CONTAINER_NAME"
@@ -35,6 +35,6 @@ echo "=== Uploading backup to S3 ==="
 aws s3 cp "$BACKUP_FILE" "$S3_BUCKET/"
 
 echo "=== Cleaning temporary files ==="
-sudo rm -f "$BACKUP_FILE"
+rm -f "$BACKUP_FILE"
 
 echo "=== Jenkins backup completed successfully ==="
