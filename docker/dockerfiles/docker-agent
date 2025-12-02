@@ -5,10 +5,12 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     curl \
-    docker.io
+    docker.io \
+    tar \
+    gzip
 
-# Install Maven 3.9.6 manually
-RUN wget -q https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && \
+# Install Maven 3.9.6 from correct URL
+RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && \
     tar -xzf apache-maven-3.9.6-bin.tar.gz -C /opt && \
     ln -s /opt/apache-maven-3.9.6/bin/mvn /usr/local/bin/mvn && \
     rm apache-maven-3.9.6-bin.tar.gz
