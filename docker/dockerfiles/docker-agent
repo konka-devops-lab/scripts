@@ -1,10 +1,17 @@
 FROM eclipse-temurin:17-jdk
 
-# Install Maven 3.9 (different package name)
-RUN apt-get update && apt-get install -y maven
+# Install basic tools first
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    curl \
+    docker.io
 
-# Verify Maven version
-RUN mvn --version
+# Install Maven 3.9.6 manually
+RUN wget -q https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz && \
+    tar -xzf apache-maven-3.9.6-bin.tar.gz -C /opt && \
+    ln -s /opt/apache-maven-3.9.6/bin/mvn /usr/local/bin/mvn && \
+    rm apache-maven-3.9.6-bin.tar.gz
 
 # Install Sonar Scanner
 RUN wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip && \
@@ -23,9 +30,6 @@ RUN wget -q https://github.com/aquasecurity/trivy/releases/download/v0.49.1/triv
     tar -xzf trivy_0.49.1_Linux-64bit.tar.gz && \
     mv trivy /usr/local/bin/ && \
     rm trivy_0.49.1_Linux-64bit.tar.gz
-
-# Install Docker CLI
-RUN apt-get install -y docker.io
 
 WORKDIR /app
 
