@@ -25,24 +25,24 @@ echo "Latest backup file: $LATEST_BACKUP"
 echo "=== Downloading backup from S3 ==="
 aws s3 cp "$S3_BUCKET/$LATEST_BACKUP" "$RESTORE_TMP/jenkins-restore.tar.gz"
 
-echo "++++ Detecting Jenkins container ++++"
-CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep -i jenkins | head -1)
+# echo "++++ Detecting Jenkins container ++++"
+# CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep -i jenkins | head -1)
 
-if [ -z "$CONTAINER_NAME" ]; then
-  echo "WARNING: No Jenkins container running. Trying to find stopped container..."
-  CONTAINER_NAME=$(docker ps -a --format '{{.Names}}' | grep -i jenkins | head -1)
-fi
+# if [ -z "$CONTAINER_NAME" ]; then
+#   echo "WARNING: No Jenkins container running. Trying to find stopped container..."
+#   CONTAINER_NAME=$(docker ps -a --format '{{.Names}}' | grep -i jenkins | head -1)
+# fi
 
-if [ -z "$CONTAINER_NAME" ]; then
-  echo "ERROR: Jenkins container not found."
-  exit 1
-fi
+# if [ -z "$CONTAINER_NAME" ]; then
+#   echo "ERROR: Jenkins container not found."
+#   exit 1
+# fi
 
-echo "Using Jenkins container: $CONTAINER_NAME"
+# echo "Using Jenkins container: $CONTAINER_NAME"
 
 
-echo "=== Stopping Jenkins container ==="
-docker stop "$CONTAINER_NAME" || true
+# echo "=== Stopping Jenkins container ==="
+# docker stop "$CONTAINER_NAME" || true
 
 echo "=== Cleaning old Jenkins home ==="
 sudo rm -rf "$VOLUME_PATH"/*
